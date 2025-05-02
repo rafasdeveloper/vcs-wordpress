@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  wordpress:
+    user: root
+    build:
+      context: ./base
+      dockerfile: Dockerfile
+    ports:
+      - "9010:9000"
+    networks:
+      - rd-dev-network
+    environment:
+      - WORDPRESS_PLUGINS=$VCS_DEV_WORDPRESS_PLUGINS
+      - WORDPRESS_SITE_URL=$COOLIFY_URL
+      - WORDPRESS_DB_HOST=$VCS_DEV_DB_HOST
+      - WORDPRESS_DB_USER=$VCS_DEV_DB_USER
+      - WORDPRESS_DB_PASSWORD=$VCS_DEV_DB_PASSWORD
+      - WORDPRESS_DB_NAME=$VCS_DEV_DB_NAME
+      - WORDPRESS_REDIS_HOST=$VCS_DEV_REDIS_CACHE_HOST
+      - WORDPRESS_REDIS_PORT=$VCS_DEV_REDIS_CACHE_PORT
+      - WORDPRESS_REDIS_PASSWORD=$VCS_DEV_REDIS_CACHE_PASSWORD
+      - WORDPRESS_REDIS_DATABASE=$VCS_DEV_REDIS_CACHE_DATABASE
+      - WORDPRESS_CACHE=$VCS_DEV_REDIS_CACHE
+      - PHP_SESSION_REDIS_HOST=$VCS_DEV_REDIS_SESSION_HOST
+      - PHP_SESSION_REDIS_DATABASE=$VCS_DEV_REDIS_SESSION_DATABASE
+      - PHP_SESSION_REDIS_PORT=$VCS_DEV_REDIS_SESSION_PORT
+      - PHP_SESSION_REDIS_PASSWORD=$VCS_DEV_REDIS_SESSION_PASSWORD
+    volumes:
+      - site_storage:/var/www/html:rw
+    restart: always
+
+volumes:
+  site_storage:
+    driver: local
+
+networks:
+  rd-dev-network:
+    name: rd-dev-network
+    external: true
