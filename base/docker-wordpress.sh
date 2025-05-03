@@ -106,7 +106,7 @@ install_wp_cli() {
 }
 
 install_wp_plugins() {
-    local plugins_list=$WORDPRESS_PLUGINS
+    local plugins_list=$VCS_DEV_WORDPRESS_PLUGINS
 
     if [ -z "${plugins_list}" ]; then
         echo "No plugins specified in the ${plugins_env_var} environment variable. Skipping plugin installation."
