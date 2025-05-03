@@ -7,6 +7,12 @@ main()
 {
 		info "Finally running supervisord." 1
 		supervisord -c /etc/supervisord.conf
+
+		info "WP optimizations." 1
+		wp cache flush
+		wp media regenerate --yes
+		wp transient delete --expired
+		wp db optimize
 }
 
 

@@ -89,8 +89,6 @@ install_wordpress() {
 install_wp_cli() {
     local wp_cli_bin="/usr/local/bin/wp"
 
-    echo "Setting up WP-CLI..."
-
     # Download WP-CLI
     curl -o /tmp/wp-cli.phar -SL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
