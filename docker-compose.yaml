@@ -7,7 +7,7 @@ services:
       context: ./base
       dockerfile: Dockerfile
     ports:
-      - "9010:9000"
+      - "9000:9000"
     networks:
       - rd-dev-network
     environment:
@@ -27,11 +27,11 @@ services:
       - PHP_SESSION_REDIS_PORT=$VCS_DEV_REDIS_SESSION_PORT
       - PHP_SESSION_REDIS_PASSWORD=$VCS_DEV_REDIS_SESSION_PASSWORD
     volumes:
-      - site_storage:/var/www/html:rw
+      - wp_storage:/var/www/html:rw
     restart: always
 
 volumes:
-  site_storage:
+  wp_storage:
     driver: local
 
 networks:
