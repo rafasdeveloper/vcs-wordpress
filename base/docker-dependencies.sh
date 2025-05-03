@@ -73,7 +73,8 @@ install_common_apps() {
         unzip \
         vim \
         wget \
-        xz-utils
+        xz-utils \
+        openssh-server
 }
 
 # Install PHP and required extensions

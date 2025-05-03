@@ -13,6 +13,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Fixes some weird terminal issues such as broken clear / CTRL+L
 ENV TERM=linux
 
+ARG WORDPRESS_PLUGINS
+
 # Perform php Installations
 COPY ./docker-dependencies.sh /root/docker-dependencies.sh
 RUN chmod +x "/root/docker-dependencies.sh"
