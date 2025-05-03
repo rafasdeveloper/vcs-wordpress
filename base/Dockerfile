@@ -13,15 +13,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Fixes some weird terminal issues such as broken clear / CTRL+L
 ENV TERM=linux
 
-## Wordpress Conf
-COPY ./wordpress/wp-config-docker.php /tmp/wp-config-docker.php
-
-# Perform Installations
+# Perform php Installations
 COPY ./docker-dependencies.sh /root/docker-dependencies.sh
 RUN chmod +x "/root/docker-dependencies.sh"
 RUN /root/docker-dependencies.sh
 RUN rm -rf /root/docker-dependencies.sh
 
+## Wordpress Conf
+COPY ./wordpress/wp-config-docker.php /tmp/wp-config-docker.php
+
+# Perform wp Installations
 COPY ./docker-wordpress.sh /root/docker-wordpress.sh
 RUN chmod +x "/root/docker-wordpress.sh"
 RUN /root/docker-wordpress.sh
