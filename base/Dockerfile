@@ -17,10 +17,15 @@ ENV TERM=linux
 COPY ./wordpress/wp-config-docker.php /tmp/wp-config-docker.php
 
 # Perform Installations
-COPY ./docker-runs.sh /root/docker-runs.sh
-RUN chmod +x "/root/docker-runs.sh"
-RUN /root/docker-runs.sh
-RUN mkdir -p /var/www/scripts
+COPY ./docker-dependencies.sh /root/docker-dependencies.sh
+RUN chmod +x "/root/docker-dependencies.sh"
+RUN /root/docker-dependencies.sh
+RUN rm -rf /root/docker-dependencies.sh
+
+COPY ./docker-wordpress.sh /root/docker-wordpress.sh
+RUN chmod +x "/root/docker-wordpress.sh"
+RUN /root/docker-wordpress.sh
+RUN rm -rf /root/docker-wordpress.sh
 
 # Copying neccessary files
 
@@ -35,7 +40,6 @@ COPY ./supervisord/supervisord.conf /etc/supervisord.conf
 
 ## Docker scripts
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-
 RUN chmod +x "/usr/local/bin/docker-entrypoint.sh"
 
 WORKDIR "/var/www/html"

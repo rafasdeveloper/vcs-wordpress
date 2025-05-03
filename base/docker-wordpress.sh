@@ -16,128 +16,14 @@ main() {
         exit 1
     fi
 
-    info "Installing required applications" 1
-    install_common_apps
-
-    info "Installing PHP libraries" 1
-    install_php_stuff
+    info "Setting up WordPress" 1
+    install_wordpress
 
     info "Setting up WP-CLI" 1
-    setup_wp_cli
-
-    info "Setting up WordPress" 1
-    setup_wordpress
+    install_wp_cli
 
     info "Installing WordPress plugins" 1
     install_wp_plugins
-
-    info "Creating log directories" 1
-    create_log_dirs
-
-    info "Finalizing the deployment" 1
-    cleanup
-}
-
-# Install common applications and utilities
-install_common_apps() {
-    apt-get update && apt-get install -y --no-install-recommends \
-        apt-transport-https \
-        apt-utils \
-        ca-certificates \
-        cron \
-        curl \
-        dirmngr \
-        git \
-        gnupg \
-        mysql-client \
-        nginx \
-        software-properties-common \
-        supervisor \
-        netcat \
-        tar \
-        unzip \
-        vim \
-        wget \
-        xz-utils
-}
-
-# Install PHP and required extensions
-install_php_stuff() {
-    echo "Adding PHP repository..."
-    apt-get update && apt-get install -y --no-install-recommends \
-        && add-apt-repository -y ppa:ondrej/php \
-        && apt-get update
-
-    echo "Installing PHP and required extensions..."
-    apt-get install -y --no-install-recommends \
-        php-pear \
-        php-memcache \
-        php-memcached \
-        php-redis \
-        php-imagick \
-        php-apcu \
-        php-tidy \
-        php8.4 \
-        php8.4-dev \
-        php8.4-cli \
-        php8.4-curl \
-        php8.4-mbstring \
-        php8.4-opcache \
-        php8.4-readline \
-        php8.4-xml \
-        php8.4-zip \
-        php8.4-fpm \
-        php8.4-mysql \
-        php8.4-bcmath \
-        php8.4-bz2 \
-        php8.4-gd \
-        php8.4-intl \
-        php8.4-soap \
-        php8.4-exif \
-        gcc \
-        make \
-        autoconf \
-        libc-dev \
-        pkg-config \
-        libmcrypt-dev \
-        && printf "\n" | pecl install mcrypt-1.0.7 \
-        && printf "\n" | pecl install xdebug \
-        && echo "extension=mcrypt.so" > /etc/php/8.4/fpm/conf.d/mcrypt.ini \
-        && echo "extension=mcrypt.so" > /etc/php/8.4/cli/conf.d/mcrypt.ini
-
-    # Verify PHP installation
-    if ! command -v php > /dev/null 2>&1; then
-        echo "Error: PHP is not installed or not available in PATH."
-        exit 1
-    fi
-    if ! command -v php8.4 > /dev/null 2>&1; then
-        echo "Error: PHP 8.4 is not installed or not available in PATH."
-        exit 1
-    fi
-
-    # Install Composer
-    info "Installing Composer..." 1
-    mkdir /composer-setup \
-        && wget https://getcomposer.org/installer -P /composer-setup \
-        && php /composer-setup/installer --install-dir=/usr/bin \
-        && mv /usr/bin/composer{.phar,} \
-        && composer clear-cache \
-        && rm -Rf /composer-setup ~/.composer
-}
-
-# Create necessary log directories
-create_log_dirs() {
-    mkdir -p /var/log/supervisord/ \
-        && mkdir -p /var/log/php/ \
-        && chown www-data:www-data /var/log/php/ \
-        && mkdir -p /var/run/php
-}
-
-# Clean up unnecessary files and packages
-cleanup() {
-    apt-get clean
-    apt-get purge -y --auto-remove xz-utils gnupg gcc make autoconf libc-dev pkg-config
-    rm -rf /usr/local/bin/wp.gpg /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 }
 
 # Print informational messages
@@ -150,15 +36,20 @@ info() {
 }
 
 # Function to set up WordPress
-setup_wordpress() {
+install_wordpress() {
     local wordpress_dir="/var/www/html"
     local wordpress_url="https://wordpress.org/latest.tar.gz"
     local wp_config_docker="/tmp/wp-config-docker.php"
     local wp_config_target="${wordpress_dir}/wp-config.php"
 
-    # Check if the WordPress directory is empty
-    if [ ! "$(ls -A ${wordpress_dir})" ]; then
-        echo "WordPress directory is empty. Downloading and installing the latest WordPress version..."
+    # Check if the WordPress directory is empty or wp-config.php does not exist
+    if [ ! "$(ls -A ${wordpress_dir})" ] || [ ! -f "${wp_config_target}" ]; then
+        if [ "$(ls -A ${wordpress_dir})" ]; then
+            echo "WordPress directory is not empty, but wp-config.php does not exist. Emptying the directory..."
+            rm -rf ${wordpress_dir}/*
+        fi
+
+        echo "Downloading and installing the latest WordPress version..."
         
         # Download and extract WordPress
         curl -o /tmp/latest.tar.gz -SL ${wordpress_url}
@@ -174,8 +65,6 @@ setup_wordpress() {
         echo "Setting permissions for WordPress files..."
         chown -R www-data:www-data ${wordpress_dir}
         chmod -R 755 ${wordpress_dir}
-    else
-        echo "WordPress directory is not empty. Skipping setup."
 
         # Create wp-config.php from wp-config-docker.php
         if [ -f "${wp_config_docker}" ]; then
@@ -192,10 +81,12 @@ setup_wordpress() {
             echo "Error: wp-config-docker.php not found in ${wp_config_docker}."
             exit 1
         fi
+    else
+        echo "WordPress directory is not empty and wp-config.php exists. Skipping setup."
     fi
 }
 
-setup_wp_cli() {
+install_wp_cli() {
     local wp_cli_bin="/usr/local/bin/wp"
 
     echo "Setting up WP-CLI..."
