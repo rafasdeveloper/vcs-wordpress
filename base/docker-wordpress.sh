@@ -106,8 +106,7 @@ install_wp_cli() {
 }
 
 install_wp_plugins() {
-    local plugins_env_var="WORDPRESS_PLUGINS" # Environment variable containing plugin names
-    local plugins_list=$(printenv ${plugins_env_var})
+    local plugins_list=$WORDPRESS_PLUGINS
 
     if [ -z "${plugins_list}" ]; then
         echo "No plugins specified in the ${plugins_env_var} environment variable. Skipping plugin installation."
