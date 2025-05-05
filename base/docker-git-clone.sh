@@ -31,6 +31,15 @@ info() {
 
 # Function to clone the repository
 clone_repository() {
+
+    local flag_sync_completed="/var/www/html/.git-sync-complete"
+
+    # If flag git sync file exists, skip the clone
+    if [ -f "${flag_sync_completed}" ]; then
+        echo "Git sync file exists. Skipping clone."
+        return
+    fi
+    
     local repo_url="$GIT_SSH_REPO_URL"
     local branch_name="$GIT_SSH_REPO_BRANCH"
     local tmp_dir="/tmp/repo"

@@ -70,6 +70,16 @@ sync_changes() {
     local tmp_dir="/tmp/repo_sync"
     local target_dir="/var/www/html"
 
+    # Dele flag files if they exist
+    local flag_sync_completed="/var/www/html/.git-sync-complete"
+    if [ -f "${flag_sync_completed}" ]; then
+        rm -f "${flag_sync_completed}"
+    fi
+    local flag_sync_notneeded"/var/www/html/.git-sync-not-needed"
+    if [ -f "${flag_sync_notneeded}" ]; then
+        rm -f "${flag_sync_notneeded}"
+    fi
+
     # Config git email and name
     git config --global user.email vps@rafaeldeveloper.co
     git config --global user.name "VPS ${COOLIFY_UUID}"
@@ -104,6 +114,13 @@ sync_changes() {
     # Check if there are any changes to commit
     if [ -z "$(git -C "${tmp_dir}" status --porcelain)" ]; then
         echo "No changes to commit."
+        # Clean up
+        rm -rf "${tmp_dir}"
+        # Create flag file to indicate that the sync is not needed
+        touch "${flag_sync_notneeded}"
+        chown www-data:www-data "${flag_sync_notneeded}"
+        chmod 600 "${flag_sync_notneeded}"
+        echo "Sync not needed. Flag file created at ${flag_sync_notneeded}."
         return
     fi
 
@@ -118,6 +135,12 @@ sync_changes() {
     
     # Clean up
     rm -rf "${tmp_dir}"
+
+    # Create flag file to indicate that the sync is complete
+    touch "${flag_sync_completed}"
+    chown www-data:www-data "${flag_sync_completed}"
+    chmod 600 "${flag_sync_completed}"
+    echo "Sync complete. Flag file created at ${flag_sync_completed}."
 }
 
 # Execute the main function
