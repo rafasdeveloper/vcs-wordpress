@@ -17,7 +17,7 @@ main() {
     fi
 
     info "Syncing changes from VPS to repository" 1
-    sync_changes();
+    sync_changes
 
 }
 

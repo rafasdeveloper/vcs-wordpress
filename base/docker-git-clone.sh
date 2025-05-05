@@ -17,8 +17,7 @@ main() {
     fi
 
     info "Setting up repository access" 1
-    setup_ssh();
-
+    setup_ssh
 }
 
 # Print informational messages
