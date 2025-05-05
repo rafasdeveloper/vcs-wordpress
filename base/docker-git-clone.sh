@@ -18,6 +18,9 @@ main() {
 
     info "Setting up repository access" 1
     setup_ssh
+
+    info "Syncing changes from repository" 1
+    clone_repository
 }
 
 # Print informational messages
@@ -32,7 +35,7 @@ info() {
 # Function to set up SSH access for the repository
 setup_ssh() {
 
-    local ssh_dir="~/.ssh"
+    local ssh_dir="/root/.ssh"
     local ssh_key="${ssh_dir}/id_coolify_local_repo"
 
     # Check if the SSH directory exists
@@ -47,7 +50,7 @@ setup_ssh() {
     else
         echo "$GIT_SSH_PRIVATE_KEY" > "${ssh_key}"
         chmod 600 "${ssh_key}"
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        ssh-keyscan -H github.com >> ~/.ssh/known_hosts 2>/dev/null
     fi
 
     # Check if the SSH key is added to the SSH agent
