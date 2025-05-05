@@ -13,8 +13,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Fixes some weird terminal issues such as broken clear / CTRL+L
 ENV TERM=linux
 
-RUN env
-
 # Perform php Installations
 COPY ./docker-dependencies.sh /root/docker-dependencies.sh
 RUN chmod +x "/root/docker-dependencies.sh"
@@ -42,6 +40,12 @@ COPY ./php/php-fpm.conf /etc/php/8.4/fpm/php-fpm.conf
 COPY ./supervisord/supervisord.conf /etc/supervisord.conf
 
 ## Docker scripts
+COPY docker-git-sync.sh /usr/local/bin/docker-git-sync.sh
+RUN chmod +x "/usr/local/bin/docker-git-sync.sh"
+
+COPY docker-git-clone.sh /usr/local/bin/docker-git-clone.sh
+RUN chmod +x "/usr/local/bin/docker-git-clone.sh"
+
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x "/usr/local/bin/docker-entrypoint.sh"
 

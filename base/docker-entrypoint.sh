@@ -11,6 +11,12 @@ main()
 		info "Finally running supervisord." 1
 		supervisord -c /etc/supervisord.conf
 
+		info "Running git sync." 1
+		docker-git-sync.sh
+
+		info "Running git clone." 1
+		docker-git-clone.sh
+
 		info "WP optimizations." 1
 		wp cache flush
 		wp media regenerate --yes
