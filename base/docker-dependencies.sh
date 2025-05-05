@@ -74,7 +74,8 @@ install_common_apps() {
         vim \
         wget \
         xz-utils \
-        openssh-server
+        openssh-server \
+        rsync 
 }
 
 # Install PHP and required extensions
