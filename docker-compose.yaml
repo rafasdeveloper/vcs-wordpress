@@ -28,6 +28,7 @@ services:
       - PHP_SESSION_REDIS_PORT=$VCS_DEV_REDIS_SESSION_PORT
       - PHP_SESSION_REDIS_PASSWORD=$VCS_DEV_REDIS_SESSION_PASSWORD
       - SSH_AUTH_PWD=$SSH_AUTH_PWD
+      - GIT_SSH_PRIVATE_KEY=$GIT_SSH_PRIVATE_KEY
     volumes:
       - wp_storage:/var/www/html:rw
     restart: always
