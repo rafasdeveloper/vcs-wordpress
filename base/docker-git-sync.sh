@@ -75,7 +75,7 @@ sync_changes() {
     if [ -f "${flag_sync_completed}" ]; then
         rm -f "${flag_sync_completed}"
     fi
-    local flag_sync_notneeded"/var/www/html/.git-sync-not-needed"
+    local flag_sync_notneeded="/var/www/html/.git-sync-not-needed"
     if [ -f "${flag_sync_notneeded}" ]; then
         rm -f "${flag_sync_notneeded}"
     fi
