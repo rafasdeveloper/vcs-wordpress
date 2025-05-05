@@ -16,9 +16,6 @@ main() {
         exit 1
     fi
 
-    info "Setting up repository access" 1
-    setup_ssh
-
     info "Syncing changes from repository" 1
     clone_repository
 }
@@ -30,37 +27,6 @@ info() {
     [ -z "$2" ] || blink=';5'
 
     echo -e "\e[45;1${blink}m$message\e[0m"
-}
-
-# Function to set up SSH access for the repository
-setup_ssh() {
-
-    local ssh_dir="/root/.ssh"
-    local ssh_key="${ssh_dir}/id_coolify_local_repo"
-
-    # Check if the SSH directory exists
-    if [ ! -d "${ssh_dir}" ]; then
-        mkdir -p "${ssh_dir}"
-        chmod 700 "${ssh_dir}"
-    fi
-
-    # Check if the SSH key already exists
-    if [ -f "${ssh_key}" ]; then
-        echo "SSH key already exists. Skipping key generation."
-    else
-        echo "$GIT_SSH_PRIVATE_KEY" > "${ssh_key}"
-        chmod 600 "${ssh_key}"
-        ssh-keyscan -H github.com >> ~/.ssh/known_hosts 2>/dev/null
-    fi
-
-    # Check if the SSH key is added to the SSH agent
-    if ! ssh-add -l | grep -q "${ssh_key}"; then
-        echo "Adding SSH key to the SSH agent."
-        eval "$(ssh-agent -s)"
-        ssh-add "${ssh_key}"
-    else
-        echo "SSH key is already added to the SSH agent."
-    fi
 }
 
 # Function to clone the repository
@@ -85,8 +51,8 @@ clone_repository() {
     fi
 
     # Sync changes from the temporary directory to the target directory
-    rsync -av --delete "${tmp_dir}/themes" "${target_dir}/wp-content/themes"
-    rsync -av --delete "${tmp_dir}/plugins" "${target_dir}/wp-content/plugins"
+    rsync -av --delete "${tmp_dir}/themes" "${target_dir}/wp-content/"
+    rsync -av --delete "${tmp_dir}/plugins" "${target_dir}/wp-content/"
     rsync -av --delete "${tmp_dir}/wp-config.php" "${target_dir}/wp-config.php"
 
 }
