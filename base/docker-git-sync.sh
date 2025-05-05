@@ -103,13 +103,9 @@ sync_changes() {
 
     # Sync changes from the target directory to the temporary director
     # Sync target /var/www/html/wp-content/themes to the temporary directory
-    rsync -av --delete "${target_dir}/wp-content/themes" "${tmp_dir}/"
-    
-    # Sync target /var/www/html/wp-content/plugins to the temporary directory
-    rsync -av --delete "${target_dir}/wp-content/plugins" "${tmp_dir}/"
-
-    # Sync target /var/www/html/wp-config.php to the temporary directory
-    rsync -av --delete "${target_dir}/wp-config.php" "${tmp_dir}/wp-config.php"
+    rsync -auv --delete "${target_dir}/wp-content/themes" "${tmp_dir}/"
+    rsync -auv --delete "${target_dir}/wp-content/plugins" "${tmp_dir}/"
+    rsync -auv --delete "${target_dir}/wp-config.php" "${tmp_dir}/wp-config.php"
 
     # Check if there are any changes to commit
     if [ -z "$(git -C "${tmp_dir}" status --porcelain)" ]; then
