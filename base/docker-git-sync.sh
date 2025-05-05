@@ -129,7 +129,10 @@ sync_changes() {
 
     # Commit the changes with a message including the COOLIFY_UUID, COOLIFY_FQDN and the date
     git -C "${tmp_dir}" commit -m "VPS SYNC - ${COOLIFY_UUID} - ${COOLIFY_FQDN} - $(date +%Y-%m-%d)"    
-    
+
+    # Pull the latest changes from the remote repository
+    git -C "${tmp_dir}" pull origin "${branch_name}"
+
     # Push changes to the repository
     git -C "${tmp_dir}" push origin "${branch_name}"
     
