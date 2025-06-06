@@ -49,7 +49,7 @@ setup_ssh() {
     if [ -f "${ssh_key}" ]; then
         echo "SSH key already exists. Skipping key generation."
     else
-        echo "$GIT_SSH_PRIVATE_KEY" > "${ssh_key}"
+        echo -e "$GIT_SSH_PRIVATE_KEY" > "${ssh_key}"
         chmod 600 "${ssh_key}"
         ssh-keyscan -H github.com >> ~/.ssh/known_hosts 2>/dev/null
     fi
