@@ -82,6 +82,7 @@ install_common_apps() {
 install_php_stuff() {
     echo "Adding PHP repository..."
     apt-get update && apt-get install -y --no-install-recommends \
+        software-properties-common \
         && add-apt-repository -y ppa:ondrej/php \
         && apt-get update
 
