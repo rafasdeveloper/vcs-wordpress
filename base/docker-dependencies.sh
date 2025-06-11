@@ -68,7 +68,7 @@ install_common_apps() {
         nginx \
         software-properties-common \
         supervisor \
-        netcat \
+        netcat-openbsd \
         tar \
         unzip \
         vim \
