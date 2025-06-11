@@ -95,23 +95,23 @@ install_php_stuff() {
         php-imagick \
         php-apcu \
         php-tidy \
-        php8.4 \
-        php8.4-dev \
-        php8.4-cli \
-        php8.4-curl \
-        php8.4-mbstring \
-        php8.4-opcache \
-        php8.4-readline \
-        php8.4-xml \
-        php8.4-zip \
-        php8.4-fpm \
-        php8.4-mysql \
-        php8.4-bcmath \
-        php8.4-bz2 \
-        php8.4-gd \
-        php8.4-intl \
-        php8.4-soap \
-        php8.4-exif \
+        php${PHP_VERSION} \
+        php${PHP_VERSION}-dev \
+        php${PHP_VERSION}-cli \
+        php${PHP_VERSION}-curl \
+        php${PHP_VERSION}-mbstring \
+        php${PHP_VERSION}-opcache \
+        php${PHP_VERSION}-readline \
+        php${PHP_VERSION}-xml \
+        php${PHP_VERSION}-zip \
+        php${PHP_VERSION}-fpm \
+        php${PHP_VERSION}-mysql \
+        php${PHP_VERSION}-bcmath \
+        php${PHP_VERSION}-bz2 \
+        php${PHP_VERSION}-gd \
+        php${PHP_VERSION}-intl \
+        php${PHP_VERSION}-soap \
+        php${PHP_VERSION}-exif \
         gcc \
         make \
         autoconf \
@@ -120,16 +120,16 @@ install_php_stuff() {
         libmcrypt-dev \
         && printf "\n" | pecl install mcrypt-1.0.7 \
         && printf "\n" | pecl install xdebug \
-        && echo "extension=mcrypt.so" > /etc/php/8.4/fpm/conf.d/mcrypt.ini \
-        && echo "extension=mcrypt.so" > /etc/php/8.4/cli/conf.d/mcrypt.ini
+        && echo "extension=mcrypt.so" > /etc/php/${PHP_VERSION}/fpm/conf.d/mcrypt.ini \
+        && echo "extension=mcrypt.so" > /etc/php/${PHP_VERSION}/cli/conf.d/mcrypt.ini
 
     # Verify PHP installation
     if ! command -v php > /dev/null 2>&1; then
         echo "Error: PHP is not installed or not available in PATH."
         exit 1
     fi
-    if ! command -v php8.4 > /dev/null 2>&1; then
-        echo "Error: PHP 8.4 is not installed or not available in PATH."
+    if ! command -v php${PHP_VERSION} > /dev/null 2>&1; then
+        echo "Error: PHP ${PHP_VERSION} is not installed or not available in PATH."
         exit 1
     fi
 

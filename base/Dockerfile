@@ -1,5 +1,5 @@
-# Base Image UBUNTU 20.04
-FROM ubuntu:20.04
+# Base Image UBUNTU 24.04
+FROM ubuntu:24.04
 
 LABEL mantainer="Rafael <rafael@booug.com>"
 
@@ -12,6 +12,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Fixes some weird terminal issues such as broken clear / CTRL+L
 ENV TERM=linux
+
+# Set PHP Version
+ENV PHP_VERSION=8.4
 
 # Perform php Installations
 COPY ./docker-dependencies.sh /root/docker-dependencies.sh
