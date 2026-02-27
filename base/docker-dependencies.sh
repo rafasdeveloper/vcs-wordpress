@@ -141,6 +141,10 @@ install_php_stuff() {
         && mv /usr/bin/composer{.phar,} \
         && composer clear-cache \
         && rm -Rf /composer-setup ~/.composer
+
+    # Set default PHP version
+    info "Setting default PHP version to ${PHP_VERSION}..." 1
+    update-alternatives --set php /usr/bin/php${PHP_VERSION}
 }
 
 # Execute the main function

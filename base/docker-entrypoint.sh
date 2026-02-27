@@ -17,11 +17,26 @@ main()
 		info "Running git clone." 1
 		docker-git-clone.sh
 
-		info "WP optimizations." 1
-		wp cache flush
-		wp media regenerate --yes
-		wp transient delete --expired
-		wp db optimize
+    info "Installing plugin dependencies..." 1
+    install_plugin_dependencies
+
+    info "WP optimizations." 1
+    wp cache flush
+    wp media regenerate --yes
+    wp transient delete --expired
+    wp db optimize
+}
+
+install_plugin_dependencies() {
+    local plugin_dir="/var/www/html/wp-content/plugins/vcs-payment-api"
+    if [ -d "$plugin_dir" ] && [ -f "$plugin_dir/composer.json" ]; then
+        info "Installing dependencies for VCS Payment API..." 1
+        # Check if vendor directory exists to avoid re-installing every time if not needed, 
+        # but composer install is smart enough to handle this.
+        composer install --no-dev --optimize-autoloader --working-dir="$plugin_dir"
+    else
+        echo "VCS Payment API plugin directory or composer.json not found. Skipping dependency installation."
+    fi
 }
 
 
